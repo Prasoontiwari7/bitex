@@ -35,11 +35,11 @@ const ManualInsertModal: React.FC<ManualInsertModalProps> = ({ isOpen, onClose, 
         className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" 
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-[32px] shadow-2xl w-full max-w-md p-8 animate-in zoom-in-95 duration-300">
+      <div className="relative bg-white rounded-[32px] shadow-2xl w-full max-w-md p-8 animate-in zoom-in-95 duration-300 border border-slate-100">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Manual Transaction</h2>
-            <p className="text-sm text-slate-500 font-medium">Record a new walk-in order</p>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">New Transaction</h2>
+            <p className="text-sm text-slate-500 font-medium">Record a walk-in guest session</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -52,7 +52,7 @@ const ManualInsertModal: React.FC<ManualInsertModalProps> = ({ isOpen, onClose, 
             <input 
               required
               type="text" 
-              placeholder="e.g. Alex Johnson"
+              placeholder="Guest Name or Party ID"
               className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3 focus:border-amber-400 focus:bg-white outline-none transition-all font-medium text-slate-700"
               value={formData.customerName}
               onChange={e => setFormData({...formData, customerName: e.target.value})}
@@ -61,7 +61,7 @@ const ManualInsertModal: React.FC<ManualInsertModalProps> = ({ isOpen, onClose, 
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Total Bill (₹)</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Bill Amount (₹)</label>
               <input 
                 required
                 type="number" 
@@ -84,7 +84,7 @@ const ManualInsertModal: React.FC<ManualInsertModalProps> = ({ isOpen, onClose, 
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Satisfaction Rating</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Experience Rating</label>
             <div className="flex justify-between items-center bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3">
               {[1,2,3,4,5].map(star => (
                 <button
@@ -100,7 +100,7 @@ const ManualInsertModal: React.FC<ManualInsertModalProps> = ({ isOpen, onClose, 
           </div>
 
           <div className="pt-4 flex gap-3">
-            <BiteButton className="flex-1 py-4 text-base" variant="primary">Submit Record</BiteButton>
+            <BiteButton className="flex-1 py-4 text-base" variant="primary">Process Transaction</BiteButton>
           </div>
         </form>
       </div>

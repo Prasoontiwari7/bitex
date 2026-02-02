@@ -2,16 +2,26 @@
 import { Order, MenuItem, Customer, DashboardData } from '../types';
 
 const MENU_ITEMS: MenuItem[] = [
-  { id: '1', name: 'Paneer Tikka Angare', category: 'Appetizer', sellingPrice: 450, costPrice: 120 },
-  { id: '2', name: 'Butter Chicken Masala', category: 'Main', sellingPrice: 850, costPrice: 280 },
-  { id: '3', name: 'Dal Makhani Bukhara', category: 'Main', sellingPrice: 650, costPrice: 150 },
-  { id: '4', name: 'Mutton Rogan Josh', category: 'Main', sellingPrice: 1150, costPrice: 380 },
-  { id: '5', name: 'Kesari Rasmalai', category: 'Dessert', sellingPrice: 350, costPrice: 90 },
-  { id: '6', name: 'Classic Mango Lassi', category: 'Beverage', sellingPrice: 280, costPrice: 60 },
-  { id: '7', name: 'Hara Bhara Kabab', category: 'Appetizer', sellingPrice: 420, costPrice: 110 },
-  { id: '8', name: 'Paneer Lababdar', category: 'Main', sellingPrice: 750, costPrice: 220 },
-  { id: '9', name: 'Gulab Jamun with Rabri', category: 'Dessert', sellingPrice: 400, costPrice: 110 },
-  { id: '10', name: 'Masala Cutting Chai', category: 'Beverage', sellingPrice: 180, costPrice: 40 },
+  { id: '1', name: 'Old Delhi Butter Chicken', category: 'Main', sellingPrice: 850, costPrice: 220 },
+  { id: '2', name: 'Awadhi Mutton Biryani', category: 'Main', sellingPrice: 1250, costPrice: 380 },
+  { id: '3', name: 'Paneer Tikka Multani', category: 'Appetizer', sellingPrice: 550, costPrice: 150 },
+  { id: '4', name: 'Tandoori Jhinga (Prawns)', category: 'Main', sellingPrice: 1550, costPrice: 520 },
+  { id: '5', name: 'Kesari Rasmalai', category: 'Dessert', sellingPrice: 420, costPrice: 90 },
+  { id: '6', name: 'Mango Lassi Supreme', category: 'Beverage', sellingPrice: 280, costPrice: 60 },
+  { id: '7', name: 'Galouti Kebab', category: 'Appetizer', sellingPrice: 650, costPrice: 180 },
+  { id: '8', name: 'Dal Makhani Bukhara', category: 'Main', sellingPrice: 620, costPrice: 140 },
+  { id: '9', name: 'Gulab Jamun with Rabri', category: 'Dessert', sellingPrice: 380, costPrice: 80 },
+  { id: '10', name: 'Masala Kokum Cooler', category: 'Beverage', sellingPrice: 240, costPrice: 40 },
+  { id: '11', name: 'Hyderabadi Veg Biryani', category: 'Main', sellingPrice: 750, costPrice: 190 },
+  { id: '12', name: 'Samosa Chaat Platter', category: 'Appetizer', sellingPrice: 350, costPrice: 85 },
+  { id: '13', name: 'Kashmiri Rogan Josh', category: 'Main', sellingPrice: 1100, costPrice: 340 },
+  { id: '14', name: 'Gajar Ka Halwa', category: 'Dessert', sellingPrice: 320, costPrice: 70 },
+  { id: '15', name: 'Assamese Masala Tea', category: 'Beverage', sellingPrice: 150, costPrice: 30 },
+  { id: '16', name: 'Malai Kofta Mughlai', category: 'Main', sellingPrice: 720, costPrice: 160 },
+  { id: '17', name: 'Amritsari Fish Fry', category: 'Appetizer', sellingPrice: 880, costPrice: 260 },
+  { id: '18', name: 'Shahi Tukda with Thandai', category: 'Dessert', sellingPrice: 450, costPrice: 110 },
+  { id: '19', name: 'Palak Paneer', category: 'Main', sellingPrice: 680, costPrice: 150 },
+  { id: '20', name: 'Pink Guava Chilli Sip', category: 'Beverage', sellingPrice: 260, costPrice: 55 },
 ];
 
 export const generateMockData = (): DashboardData => {
@@ -20,26 +30,33 @@ export const generateMockData = (): DashboardData => {
   const now = new Date();
   
   // Generate ~250 customers
+  const indianNames = [
+    'Arjun Mehta', 'Priya Sharma', 'Rahul Kapoor', 'Sneha Reddy', 
+    'Vikram Singh', 'Ananya Iyer', 'Siddharth Gupta', 'Ishani Verma',
+    'Rohan Das', 'Kavita Nair', 'Amitabh Bose', 'Zoya Khan',
+    'Suresh Prabhu', 'Meera Deshmukh', 'Aditya Kulkarni', 'Neha Grewal'
+  ];
+
   for (let i = 0; i < 250; i++) {
     customers.push({
       id: `cust-${i}`,
-      name: `Guest ${i + 1}`,
+      name: indianNames[i % indianNames.length] + ` ${i + 1}`,
       firstVisit: new Date(now.getTime() - Math.random() * 60 * 24 * 60 * 60 * 1000).toISOString()
     });
   }
 
-  // Generate 45 days of orders for richer trends
-  for (let d = 0; d < 45; d++) {
+  // Generate 30 days of orders
+  for (let d = 0; d < 30; d++) {
     const day = new Date(now.getTime() - d * 24 * 60 * 60 * 1000);
-    // More orders on weekends (Friday, Saturday, Sunday)
+    // Heavy volume on Friday, Saturday, Sunday (Indian weekend patterns)
     const dayOfWeek = day.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6;
-    const orderCount = isWeekend ? 70 + Math.floor(Math.random() * 50) : 35 + Math.floor(Math.random() * 25);
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6 || dayOfWeek === 5;
+    const orderCount = isWeekend ? 75 + Math.floor(Math.random() * 50) : 40 + Math.floor(Math.random() * 30);
 
     for (let o = 0; o < orderCount; o++) {
-      // Simulate peak Indian dining hours: Lunch (1-3 PM) and late Dinner (8-11 PM)
+      // Simulate peak hours: Lunch (1-3pm) and Dinner (8-11pm) - typical Indian dining hours
+      let hour;
       const rand = Math.random();
-      let hour: number;
       if (rand > 0.6) {
         hour = Math.floor(Math.random() * 4) + 19; // Dinner: 7, 8, 9, 10 PM
       } else if (rand > 0.3) {
@@ -51,18 +68,18 @@ export const generateMockData = (): DashboardData => {
       const orderDate = new Date(day);
       orderDate.setHours(hour, Math.floor(Math.random() * 60));
       
-      const prepTimeMinutes = 20 + Math.floor(Math.random() * 30); // Indian cooking often takes longer
+      const prepTimeMinutes = 20 + Math.floor(Math.random() * 30);
       const servedDate = new Date(orderDate.getTime() + prepTimeMinutes * 60 * 1000);
       
-      const guestCount = Math.floor(Math.random() * 8) + 1; // Indian families are often larger
+      // Indian families often dine in larger groups
+      const guestCount = Math.random() > 0.7 ? (Math.floor(Math.random() * 6) + 4) : (Math.floor(Math.random() * 3) + 1);
       const customerIdx = Math.floor(Math.random() * customers.length);
       const customer = customers[customerIdx];
 
-      // Smart item selection logic: mostly Mains, some Appetizers and Drinks
       const itemChoices = [...MENU_ITEMS].sort(() => 0.5 - Math.random()).slice(0, 2 + Math.floor(Math.random() * 5));
       const items = itemChoices.map(mi => ({
         menuItemId: mi.id,
-        quantity: 1 + Math.floor(Math.random() * 2),
+        quantity: 1 + (Math.random() > 0.8 ? 1 : 0), // Mostly 1, sometimes 2
         priceAtOrder: mi.sellingPrice
       }));
 
@@ -77,7 +94,7 @@ export const generateMockData = (): DashboardData => {
         orderPlacedAt: orderDate.toISOString(),
         orderServedAt: servedDate.toISOString(),
         guestCount,
-        rating: 4.2 + (Math.random() * 0.8) // High satisfaction simulation
+        rating: 3.5 + (Math.random() * 1.5) // Realistic satisfaction range
       });
     }
   }

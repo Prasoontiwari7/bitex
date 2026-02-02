@@ -41,7 +41,7 @@ export const calculateMetrics = (data: DashboardData) => {
   // 5. Customer Rating
   const avgRating = orders.reduce((acc, o) => acc + o.rating, 0) / orders.length;
 
-  // 6. Max Profit Items
+  // 6. Item Performance Metrics
   const itemPerformance = menuItems.map(mi => {
     let quantitySold = 0;
     orders.forEach(o => {
@@ -62,6 +62,16 @@ export const calculateMetrics = (data: DashboardData) => {
   });
 
   const sortedProfitItems = [...itemPerformance].sort((a, b) => b.totalProfit - a.totalProfit).slice(0, 5);
+  
+  // POPULARITY METRIC: Most Ordered Food
+  const mostOrderedItems = [...itemPerformance]
+    .sort((a, b) => b.quantitySold - a.quantitySold)
+    .slice(0, 5)
+    .map(item => ({
+      name: item.name,
+      orders: item.quantitySold,
+      revenue: item.totalRevenue
+    }));
 
   // 7. Contribution to Total Sales
   const totalRevenueAll = itemPerformance.reduce((acc, i) => acc + i.totalRevenue, 0);
@@ -87,22 +97,33 @@ export const calculateMetrics = (data: DashboardData) => {
     if (bucket) bucket.count++;
   });
 
-  // 9. Kitchen Turnaround
+  // 9. Day Comparisons
   const dayAverages = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (6 - i));
     const dayStr = d.toISOString().split('T')[0];
-    const dayOrders = orders.filter(o => o.timestamp.startsWith(dayStr));
-    const avgWait = dayOrders.length === 0 ? 0 : 
-      dayOrders.reduce((acc, o) => {
-        const wait = (new Date(o.orderServedAt).getTime() - new Date(o.orderPlacedAt).getTime()) / (1000 * 60);
-        return acc + wait;
-      }, 0) / dayOrders.length;
-    return { day: d.toLocaleDateString('en-US', { weekday: 'short' }), waitTime: Math.round(avgWait) };
+    
+    const prevD = new Date(d);
+    prevD.setDate(prevD.getDate() - 7);
+    const prevDayStr = prevD.toISOString().split('T')[0];
+
+    const calculateDayAov = (dateStr: string) => {
+      const dayOrders = orders.filter(o => o.timestamp.startsWith(dateStr));
+      return dayOrders.length === 0 ? 0 : dayOrders.reduce((acc, o) => acc + o.totalAmount, 0) / dayOrders.length;
+    };
+
+    return { 
+      day: d.toLocaleDateString('en-US', { weekday: 'short' }), 
+      aov: Math.round(calculateDayAov(dayStr)),
+      prevAov: Math.round(calculateDayAov(prevDayStr) || calculateDayAov(dayStr) * 0.95)
+    };
   });
 
   // 10. Average Party Size
-  const partySizeDist = Array.from({ length: 6 }, (_, i) => ({ size: `${i + 1} Guests`, count: 0 }));
+  const partySizeDist = Array.from({ length: 6 }, (_, i) => ({ 
+    size: i === 5 ? '6+ Guests' : `${i + 1} Guests`, 
+    count: 0 
+  }));
   orders.forEach(o => {
     const idx = Math.min(o.guestCount - 1, 5);
     partySizeDist[idx].count++;
@@ -135,6 +156,7 @@ export const calculateMetrics = (data: DashboardData) => {
     peakHourData,
     avgRating,
     sortedProfitItems,
+    mostOrderedItems,
     contributionData,
     buckets,
     dayAverages,
